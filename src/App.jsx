@@ -116,6 +116,9 @@ function App() {
 
     if(opponentHp == 0){
       setMessage(`Parabéns, seu ${playerPokemon.name} venceu!`)
+      setTimeout(() => {
+      resetGame()
+      }, 3000);
       return
     }
 
@@ -135,10 +138,13 @@ function App() {
     const availableAttacks = opponentPokemon.attacks.filter((attack) => attack.uses > 0)
 
     if(availableAttacks.length == 0){
-      const log = `${opponentPokemon.name} não possui mais ataques!`
-
+      const log = `${opponentPokemon.name} não possui mais ataques! Você Ganhou!`
       setMessage(log)
       addLog(log)
+
+      setTimeout(() => {
+        resetGame()
+      }, 3000);
       return 
     }
 
@@ -174,7 +180,6 @@ function App() {
       hp: playerHp
     })
 
-    selectedAttack.uses -= 1
 
     let commentary = ""
 
@@ -240,8 +245,8 @@ function App() {
       {
         playerPokemon?.hp &&
        <div className='battle'>
-        <div>
-            <p className='nes-dialog'>{message}</p>
+        <div className='message'>
+            <p>{message|| 'Aguardando...'}</p>
         </div>
     <div className='pokemon-status'>
       <div>
@@ -261,7 +266,7 @@ function App() {
        {isPlayerTurn && playerPokemon?.hp > 0 && opponentPokemon?.hp > 0 && (
         <div className='attack-options'>
           {playerPokemon?.attacks.map((selectedAttack) => (
-            <button key={selectedAttack.name} style={{marginLeft: '10px'}} className='nes-btn is-warning' onClick={() => playerAttack(selectedAttack)}
+            <button key={selectedAttack.name} style={{marginLeft: '10px', position: 'relative'}} className='nes-btn is-warning' onClick={() => playerAttack(selectedAttack)}
             disabled={selectedAttack.uses <= 0}>{selectedAttack.name} ({selectedAttack.damage} DMG)</button>
           ))}
         </div>
